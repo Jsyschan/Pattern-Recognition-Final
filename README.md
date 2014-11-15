@@ -7,7 +7,7 @@ Wine Quality Data
 
 Premake 4
 - a portable build system
-- default config file searched for is premake.lua
+- default config file searched for is premake4.lua
   > can specify a different config file on the command line
 - https://github.com/annulen/premake
 - http://industriousone.com/what-premake
