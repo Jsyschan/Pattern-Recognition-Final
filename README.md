@@ -1,6 +1,19 @@
 Pattern-Recognition-Final
 =========================
 
+Directory Structure
+.        : contains premake, README, and LICENSEs
+data     : contains wine quality data
+example  : contains driver files (*.cpp)
+  - obj  : contains driver object files (*.o)
+include  : contains library headers (*.h)
+lib      : contains library file (*.a)
+proposal : contains project proposal 
+report   : contains final report
+src      : contains library source files (*.cpp)
+  - obj  : contains library object files (*.o)
+
+
 Wine Quality Data
 - http://archive.ics.uci.edu/ml/datasets/Wine+Quality
 
