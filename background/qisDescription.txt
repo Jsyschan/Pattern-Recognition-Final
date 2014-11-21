@@ -1,0 +1,7 @@
+Qi’s questions
+- Why is pattern recognition important for this problem?
+- How would solving this problem benefit society?
+- What are the features of the data?
+- Who collected the data?
+- What is the highest accuracy classification?
+- What classifier was it?
