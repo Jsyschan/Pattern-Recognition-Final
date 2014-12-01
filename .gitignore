@@ -27,11 +27,18 @@
 *.out
 *.app
 
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x86/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
+
 # Dependencies
 *.d
 
 # Mac
 .DS_Store
 
-obj/*
-bin/*
