@@ -159,6 +159,8 @@ Matrix appendColumn(const Matrix &data,
 
 string toLatex(const Matrix &data);
 
+double vectorNorm(const Matrix &data);
+
 #endif
 
 

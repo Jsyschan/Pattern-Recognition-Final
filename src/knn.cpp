@@ -122,7 +122,7 @@ Matrix knn(const Matrix &train,
   {
     testSample = subMatrix(knnTest, i, 0, i, numFeatures - 1);
 
-    label = knnPerSample(train, testSample, k, numFeatures, numClasses, partialDistance);
+    label = knnPerSample(train, testSample, k, numFeatures, numClasses, partialDistance, minkowskiDegree);
     knnTest(i, numFeatures) = label;
   }  
 
@@ -174,7 +174,7 @@ int knnPerSample(const Matrix &train,
       sum += (double) pow( ( trainSample(0, j) - testSample(0, j) ), minkowskiDegree );
       distance = (double) pow( sum, ( 1 / ( (double) minkowskiDegree ) ) );
 
-      earlyExit = ( sortedDistances.size() == k ) && ( distance > maxDistance );
+      earlyExit = ( (int) sortedDistances.size() == k ) && ( distance > maxDistance );
       if ( earlyExit && partialDistance )
         break;
     }
@@ -185,7 +185,7 @@ int knnPerSample(const Matrix &train,
     
     // Only keep the k smallest distances
     sortedDistances.insert(entry);
-    if ( sortedDistances.size() > k )
+    if ( (int) sortedDistances.size() > k )
       sortedDistances.erase( --sortedDistances.end() );
   }
 
@@ -195,7 +195,7 @@ int knnPerSample(const Matrix &train,
     votes[ it->second ]++;
 
   // Get the label with the highest number of votess
-  for ( int i = 0; i < votes.size(); i++ )
+  for ( int i = 0; i < (int) votes.size(); i++ )
   {
     if ( votes[i] > maxCount )
     {

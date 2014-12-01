@@ -262,6 +262,7 @@ Matrix readImage(const char *fname, int *nrImg, int *ncImg)
   fp = fopen(fname, "r");
   if (!fp) {
     cerr << "READIMAGE: Can't read image file: " << fname << endl;
+    exit(EXIT_FAILURE);
   }
 
   // identify image format
@@ -269,6 +270,7 @@ Matrix readImage(const char *fname, int *nrImg, int *ncImg)
 
   if (!(dummy[0] == 'P' && dummy[1] == '6')) {
     cerr << "READIMAGE: Can't identify image format." << endl;
+    exit(EXIT_FAILURE);
   }
 
   // skip the comments

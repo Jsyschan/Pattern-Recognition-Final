@@ -198,3 +198,49 @@ double getTime()
   return (double) time.tv_sec + (double) time.tv_usec * .000001;
 }
 
+double vectorNorm(const Matrix &data)
+{
+	if ( data.getCol() != 1 )
+	{
+		cerr << "Can only get the vector norm of 1 column matrices" << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	double sum = 0;
+	int i = 0;
+	for ( i = 0; i < data.getRow(); i++ )
+		sum += pow( data(i, 0), 2 );
+	return sqrt( sum );
+}
+
+double meanSquaredError(const Matrix &real, const Matrix &pred)
+{
+	if ( ( real.getRow() != pred.getRow() ) && ( real.getCol() != pred.getCol() ) )
+	{
+		cerr << "Cannot calculate mean squared error. Matrices must have the same dimensions." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	Matrix errors( real.getRow(), 1 );
+	int i = 0;
+	int j = 0;
+	double diffSum = 0.0;
+	double errorSum = 0.0;
+
+	for ( i = 0; i < real.getRow(); i++ )
+	{
+		for ( j = 0; j < real.getCol(); j++ )
+		{
+			diffSum += pow( pred(i, j) - real(i, j), 2);
+			// cout << "diff: " << diffSum << endl;
+		}
+
+		errors(i, 0) = ( (double) 1.0 / real.getCol() ) * diffSum;
+		// cout << "Error " << i << ": " << errors(i, 0)  << endl;
+		errorSum += errors(i, 0);
+		diffSum = 0.0;
+	}
+
+	return errorSum / real.getRow();
+}
+

@@ -147,9 +147,18 @@ void perfEval(const Matrix &confusion,
 double classificationError(const Matrix &actualLabels,
                            const Matrix &predictedLabels);
 
+double meanSquaredError(const Matrix &real, const Matrix &pred);
+
 ////////////////////////
 // Computation Time (JCW)
 double getTime();
+
+////////////////////////
+// Clustering
+Matrix kMeans(const Matrix &data, 
+              const int &numClusters, 
+              const double &learningRate = 0.0,
+              const double &windowSize = 0.0);
 
 #endif
 
