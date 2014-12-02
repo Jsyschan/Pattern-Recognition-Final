@@ -63,6 +63,138 @@ ifeq ($(config),release)
   endef
 endif
 
+ifeq ($(config),debug32)
+  OBJDIR     = obj/x32/Debug
+  TARGETDIR  = ../lib
+  TARGET     = $(TARGETDIR)/libpattern.a
+  DEFINES   += -D_DEBUG -DDEBUG
+  INCLUDES  += -I../include
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra -m32
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -m32 -L/usr/lib32
+  LDDEPS    +=
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
+ifeq ($(config),release32)
+  OBJDIR     = obj/x32/Release
+  TARGETDIR  = ../lib
+  TARGET     = $(TARGETDIR)/libpattern.a
+  DEFINES   += -DNDEBUG
+  INCLUDES  += -I../include
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -m32
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -Wl,-x -m32 -L/usr/lib32
+  LDDEPS    +=
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
+ifeq ($(config),debug64)
+  OBJDIR     = obj/x64/Debug
+  TARGETDIR  = ../lib
+  TARGET     = $(TARGETDIR)/libpattern.a
+  DEFINES   += -D_DEBUG -DDEBUG
+  INCLUDES  += -I../include
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra -m64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -m64 -L/usr/lib64
+  LDDEPS    +=
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
+ifeq ($(config),release64)
+  OBJDIR     = obj/x64/Release
+  TARGETDIR  = ../lib
+  TARGET     = $(TARGETDIR)/libpattern.a
+  DEFINES   += -DNDEBUG
+  INCLUDES  += -I../include
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -m64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -Wl,-x -m64 -L/usr/lib64
+  LDDEPS    +=
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(AR) -rcs $(TARGET) $(OBJECTS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
+ifeq ($(config),debuguniv)
+  OBJDIR     = obj/Universal/Debug
+  TARGETDIR  = ../lib
+  TARGET     = $(TARGETDIR)/libpattern.a
+  DEFINES   += -D_DEBUG -DDEBUG
+  INCLUDES  += -I../include
+  ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra -arch i386 -arch x86_64 -arch ppc -arch ppc64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -arch i386 -arch x86_64 -arch ppc -arch ppc64
+  LDDEPS    +=
+  LIBS      += $(LDDEPS)
+  LINKCMD    = libtool -o $(TARGET) $(OBJECTS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
+ifeq ($(config),releaseuniv)
+  OBJDIR     = obj/Universal/Release
+  TARGETDIR  = ../lib
+  TARGET     = $(TARGETDIR)/libpattern.a
+  DEFINES   += -DNDEBUG
+  INCLUDES  += -I../include
+  ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -arch i386 -arch x86_64 -arch ppc -arch ppc64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -Wl,-x -arch i386 -arch x86_64 -arch ppc -arch ppc64
+  LDDEPS    +=
+  LIBS      += $(LDDEPS)
+  LINKCMD    = libtool -o $(TARGET) $(OBJECTS)
+  define PREBUILDCMDS
+  endef
+  define PRELINKCMDS
+  endef
+  define POSTBUILDCMDS
+  endef
+endif
+
 OBJECTS := \
 	$(OBJDIR)/cluster.o \
 	$(OBJDIR)/dimenReduc.o \

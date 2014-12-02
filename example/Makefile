@@ -7,32 +7,32 @@ ifndef verbose
   SILENT = @
 endif
 
-ifndef CC
-  CC = gcc
-endif
+CC = gcc
+CXX = g++
+AR = ar
 
-ifndef CXX
-  CXX = g++
-endif
-
-ifndef AR
-  AR = ar
+ifndef RESCOMP
+  ifdef WINDRES
+    RESCOMP = $(WINDRES)
+  else
+    RESCOMP = windres
+  endif
 endif
 
 ifeq ($(config),debug)
   OBJDIR     = obj/Debug
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -D_DEBUG -DDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -g -Wall
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -44,17 +44,17 @@ endif
 ifeq ($(config),release)
   OBJDIR     = obj/Release
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -DNDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -O2
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -Wl,-x
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -66,17 +66,17 @@ endif
 ifeq ($(config),debug32)
   OBJDIR     = obj/x32/Debug
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -D_DEBUG -DDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -g -Wall -m32
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -m32 -L/usr/lib32 -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra -m32
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -m32 -L/usr/lib32
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -88,17 +88,17 @@ endif
 ifeq ($(config),release32)
   OBJDIR     = obj/x32/Release
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -DNDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -m32
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x -m32 -L/usr/lib32 -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -m32
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -Wl,-x -m32 -L/usr/lib32
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -110,17 +110,17 @@ endif
 ifeq ($(config),debug64)
   OBJDIR     = obj/x64/Debug
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -D_DEBUG -DDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -g -Wall -m64
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -m64 -L/usr/lib64 -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra -m64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -m64 -L/usr/lib64
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -132,17 +132,17 @@ endif
 ifeq ($(config),release64)
   OBJDIR     = obj/x64/Release
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -DNDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -m64
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x -m64 -L/usr/lib64 -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -m64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -Wl,-x -m64 -L/usr/lib64
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -154,17 +154,17 @@ endif
 ifeq ($(config),debuguniv)
   OBJDIR     = obj/Universal/Debug
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -D_DEBUG -DDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  +=  $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -g -Wall -arch i386 -arch x86_64 -arch ppc -arch ppc64
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -arch i386 -arch x86_64 -arch ppc -arch ppc64 -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -g -Wall -Wextra -arch i386 -arch x86_64 -arch ppc -arch ppc64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -arch i386 -arch x86_64 -arch ppc -arch ppc64
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -176,17 +176,17 @@ endif
 ifeq ($(config),releaseuniv)
   OBJDIR     = obj/Universal/Release
   TARGETDIR  = bin
-  TARGET     = $(TARGETDIR)/test
+  TARGET     = $(TARGETDIR)/cluster
   DEFINES   += -DNDEBUG
   INCLUDES  += -I../include
-  CPPFLAGS  +=  $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -arch i386 -arch x86_64 -arch ppc -arch ppc64
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x -arch i386 -arch x86_64 -arch ppc -arch ppc64 -L../lib
-  LIBS      += -lpattern
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
+  ALL_CPPFLAGS  += $(CPPFLAGS)  $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -arch i386 -arch x86_64 -arch ppc -arch ppc64
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -L../lib -Wl,-x -arch i386 -arch x86_64 -arch ppc -arch ppc64
   LDDEPS    += ../lib/libpattern.a
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  LIBS      += $(LDDEPS)
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -196,7 +196,7 @@ ifeq ($(config),releaseuniv)
 endif
 
 OBJECTS := \
-	$(OBJDIR)/test.o \
+	$(OBJDIR)/cluster.o \
 
 RESOURCES := \
 
@@ -214,7 +214,7 @@ all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)
 	@:
 
 $(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(RESOURCES)
-	@echo Linking test
+	@echo Linking cluster
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -235,7 +235,7 @@ else
 endif
 
 clean:
-	@echo Cleaning test
+	@echo Cleaning cluster
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)
@@ -251,14 +251,17 @@ prelink:
 	$(PRELINKCMDS)
 
 ifneq (,$(PCH))
+.NOTPARALLEL: $(GCH) $(PCH)
 $(GCH): $(PCH)
 	@echo $(notdir $<)
-	-$(SILENT) cp $< $(OBJDIR)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -MMD -MP $(DEFINES) $(INCLUDES) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
 endif
 
-$(OBJDIR)/test.o: test.cpp
+$(OBJDIR)/cluster.o: cluster.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 -include $(OBJECTS:%.o=%.d)
+ifneq (,$(PCH))
+  -include $(OBJDIR)/$(notdir $(PCH)).d
+endif

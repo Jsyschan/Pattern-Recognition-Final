@@ -6,14 +6,14 @@ ifndef config
 endif
 export config
 
-PROJECTS := test pattern
+PROJECTS := cluster pattern
 
 .PHONY: all clean help $(PROJECTS)
 
 all: $(PROJECTS)
 
-test: pattern
-	@echo "==== Building test ($(config)) ===="
+cluster: pattern
+	@echo "==== Building cluster ($(config)) ===="
 	@${MAKE} --no-print-directory -C example -f Makefile
 
 pattern: 
@@ -40,7 +40,7 @@ help:
 	@echo "TARGETS:"
 	@echo "   all (default)"
 	@echo "   clean"
-	@echo "   test"
+	@echo "   cluster"
 	@echo "   pattern"
 	@echo ""
 	@echo "For more information, see http://industriousone.com/premake/quick-start"
