@@ -3,6 +3,7 @@
 #include <map>
 #include <vector>
 #include <cmath>
+#include <string>
 using namespace std;
 
 #include "Matrix.h"

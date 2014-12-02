@@ -3,7 +3,13 @@
 #include <cmath>
 #include <string>
 #include <sstream>
-#include <sys/time.h>
+#ifdef _WIN32
+	//#include <WinBase.h>
+	#include <time.h>
+#else
+	#include <sys/time.h>
+#endif
+
 
 #include "Matrix.h"
 #include "Pr.h"
@@ -192,10 +198,14 @@ string toLatex(const Matrix &data)
 
 double getTime()
 {
-  struct timeval time;
-  if (gettimeofday(&time, NULL)) // http://linux.die.net/man/3/gettimeofday
-      exit(EXIT_FAILURE);
-  return (double) time.tv_sec + (double) time.tv_usec * .000001;
+	#ifndef _WIN32
+		struct timeval time;
+		if (gettimeofday(&time, NULL)) // http://linux.die.net/man/3/gettimeofday
+				exit(EXIT_FAILURE);
+		return (double) time.tv_sec + (double) time.tv_usec * .000001;
+	#else
+		return (double)clock() / CLOCKS_PER_SEC;
+	#endif
 }
 
 double vectorNorm(const Matrix &data)
