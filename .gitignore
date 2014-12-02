@@ -42,3 +42,6 @@ build/
 # Mac
 .DS_Store
 
+# Autosave files
+*.asv
+
