@@ -147,17 +147,26 @@ Matrix kMeans(const Matrix &data,
         clusters(i, j) = sampleMean(0, j);
     }
 
-    outStream << filePrefix << iteration;
-    clusterFile = outStream.str();
-    outStream.str("");
+    // outStream << filePrefix << iteration;
+    // clusterFile = outStream.str();
+    // outStream.str("");
     // clusterFile = filePrefix + iterationChar;
-    writeData( clusters, clusterFile.c_str() ); 
+    // writeData( clusters, clusterFile.c_str() ); 
 
-    cout << "Iteration: " << iteration << endl;
+    // cout << "Iteration: " << iteration << endl;
     // cout << "NumChanged: " << numChanged << endl;
 
     iteration++;
   }
+
+  bool kMeans = learningRate == 0.0 && windowSize == 0.0;
+  bool wta = learningRate > 0.0 && windowSize == 0.0;
+  if ( kMeans )
+    writeData( clusters, "clusters_kMeans" );
+  else if ( wta )
+    writeData( clusters, "clusters_wta" );
+  else
+    writeData( clusters, "clusters_kohonen" );
 
   return clusters;
 }
@@ -173,8 +182,11 @@ Matrix applyClusters(const Matrix &data,
   double distance = 0.0;
   double minDistance = DBL_MAX;
 
-  Matrix sample(1, dataCopy.getCol() - 1);
+  Matrix sample(1, dataCopy.getCol());
   Matrix cluster(1, clusters.getCol());
+
+  // printf("%d x %d\n", sample.getRow(), sample.getCol());
+  // printf("%d x %d\n", cluster.getRow(), cluster.getCol());
 
   // Each sample
   for ( i = 0; i < dataCopy.getRow(); i++ )

@@ -18,8 +18,8 @@ using namespace std;
 #include "Pr.h"
 
 #define USAGE "./cluster dataFile numFeatures numClusters [learningRate [windowSize]]"
-#define DEFAULT_LEARNING_RATE 0.1
-#define DEFAULT_WINDOW_SIZE   0.1
+#define DEFAULT_LEARNING_RATE 0.01
+#define DEFAULT_WINDOW_SIZE   0.01
 
 int main(int argc, char **argv)
 {
@@ -39,53 +39,64 @@ int main(int argc, char **argv)
   double end = 0.0;
   double duration = 0.0;
 
+  double mse = 0.0;
+
   Matrix data = readData(dataFile.c_str(), numFeatures);
+  Matrix wineData = subMatrix(data, 0, 0, data.getRow() - 1, data.getCol() - 2);
   
-  cout << "Beginning kMeans" << endl;
+
+  // cout << "Beginning kMeans" << endl;
   start = getTime();
 
-  Matrix clusters        = kMeans(data, 
-                                  numClusters);
+  Matrix clusters = kMeans(wineData, 
+                           numClusters);
   
   end = getTime();
   duration = end - start;
-  cout << "Ending kMeans" << endl;
+  // cout << "Ending kMeans" << endl;
   cout << "kMeans time: " << duration << endl;
-  
-  Matrix kMeansData = applyClusters(data, clusters);
-  // Get error
+    
+  Matrix kMeansData = applyClusters(wineData, clusters);
+
+  mse = meanSquaredError(wineData, kMeansData);
+  cout << "Mean squared error (average over all samples): " << mse << endl;
 
 
-  cout << "Beginning winner-takes-all" << endl;
+  // cout << "Beginning winner-takes-all" << endl;
   start = getTime();
 
-  Matrix wtaClusters     = kMeans(data, 
-                                  numClusters, 
-                                  learningRate);
+  Matrix wtaClusters = kMeans(wineData, 
+                              numClusters, 
+                              learningRate);
 
   end = getTime();
   duration = end - start;
-  cout << "Ending winner-takes-all" << endl;
-  cout << "winner-takes-all time: " << duration;
+  // cout << "Ending winner-takes-all" << endl;
+  cout << "winner-takes-all time: " << duration << endl;
 
-  // Matrix wtaData = applyClusters(data, clusters);
-  // Get error
+  Matrix wtaData = applyClusters(wineData, clusters);
 
-  cout << "Beginning kohonen maps" << endl;
+  mse = meanSquaredError(wineData, wtaData);
+  cout << "Mean squared error (average over all samples): " << mse << endl;
+
+
+  // cout << "Beginning kohonen maps" << endl;
   start = getTime();
 
-  Matrix kohonenClusters = kMeans(data, 
+  Matrix kohonenClusters = kMeans(wineData, 
                                   numClusters, 
                                   learningRate,
                                   windowSize);
 
   end = getTime();
   duration = end - start;
-  cout << "Ending kohonen maps" << endl;
-  cout << "kohonen maps time: " << duration;
+  // cout << "Ending kohonen maps" << endl;
+  cout << "kohonen maps time: " << duration << endl;
 
-  // Matrix kohData = applyClusters(data, clusters);
-  // Get error
+  Matrix kohData = applyClusters(wineData, clusters);
+
+  mse = meanSquaredError(wineData, kohData);
+  cout << "Mean squared error (average over all samples): " << mse << endl;
 
   return EXIT_SUCCESS;
 }
