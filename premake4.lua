@@ -12,7 +12,7 @@ solution "Final"
 
   platforms { "Native", "x32", "x64", "Universal" }
 
-  project "test"
+  project "cluster"
 
     kind "ConsoleApp"
     language "C++"
@@ -20,7 +20,7 @@ solution "Final"
     links { "pattern" }
 
     includedirs { "include" }
-    files { "include/*.h", "example/*.cpp" }
+    files { "include/*.h", "example/cluster.cpp" }
 
     configuration { "Debug or Release" }
       targetdir "example/bin"
