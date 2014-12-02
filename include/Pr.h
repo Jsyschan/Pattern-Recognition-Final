@@ -160,5 +160,8 @@ Matrix kMeans(const Matrix &data,
               const double &learningRate = 0.0,
               const double &windowSize = 0.0);
 
+Matrix applyClusters(const Matrix &data, 
+                     const Matrix &clusters);
+
 #endif
 

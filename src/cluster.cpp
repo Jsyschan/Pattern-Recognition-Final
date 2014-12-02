@@ -161,3 +161,50 @@ Matrix kMeans(const Matrix &data,
 
   return clusters;
 }
+
+Matrix applyClusters(const Matrix &data, 
+                     const Matrix &clusters)
+{
+  Matrix dataCopy = data;
+
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  double distance = 0.0;
+  double minDistance = DBL_MAX;
+
+  Matrix sample(1, dataCopy.getCol() - 1);
+  Matrix cluster(1, clusters.getCol());
+
+  // Each sample
+  for ( i = 0; i < dataCopy.getRow(); i++ )
+  {
+    // Copy sample
+    for ( j = 0; j < dataCopy.getCol(); j++ )
+      sample(0, j) = dataCopy(i, j);
+
+    // Each cluster
+    for ( j = 0; j < clusters.getRow(); j++)
+    {
+      // Copy cluster
+      for ( k = 0; k < clusters.getCol(); k++ )
+        cluster(0, k) = clusters(j, k);
+
+      // Assign sample to closest cluster
+      distance = euc( sample, cluster );
+      if ( distance < minDistance )
+      {
+        for ( k = 0; k < sample.getCol(); k++ )
+          dataCopy(i, k) = cluster(0, k);
+        minDistance = distance;
+      }
+    }
+
+    distance = 0;
+    minDistance = DBL_MAX;
+  }
+
+  return dataCopy;
+}
+
+
