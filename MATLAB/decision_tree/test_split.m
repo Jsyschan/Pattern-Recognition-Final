@@ -1,4 +1,4 @@
-red = dlmread('../data/winequality-red.csv', ';', 1, 0);
+red = dlmread('../../data/winequality-red.csv', ';', 1, 0);
 
 red_dims = size(red);
 red_data = red(:, 1: red_dims(2)-1);
