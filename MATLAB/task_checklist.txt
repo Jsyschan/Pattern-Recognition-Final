@@ -1,0 +1,23 @@
+Decision Tree:
+	1. Unmodified dataset - DONE
+	2. assume Gaussian-distributed (normalized) - DONE
+	3. dimensionality reduction
+		3a. PCA - DONE
+		3b. FLD
+	4. classifier fusion
+
+BPNN:
+	1. Unmodified dataset - DONE
+	2. assume gaussian-distributed (normalized) - DONE
+	3. dimensionality reduction
+		3a. PCA - DONE
+		3b. FLD
+	4. classifier fusion
+
+SVM:
+	1. Unmodified dataset - DONE
+	2. assume gaussian-distributed (normalized) - DONE
+	3. dimensionality reduction
+		3a. PCA - DONE
+		3b. FLD
+	4. classifier fusion
